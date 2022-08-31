@@ -27,7 +27,7 @@ void loop()
 
 void switchRed(int cur)
 {
-  if (cur - startR > 2700 && startR != 0)
+  if (cur - startR > 3000 && startR != 0)
   {
     digitalWrite(LED3, LOW);
     startR = 0;
@@ -35,14 +35,14 @@ void switchRed(int cur)
   else if (digitalRead(button1) == HIGH)
   {
     digitalWrite(LED3, !digitalRead(LED3));
-    delay(300);
     startR = millis();
+    delay(300);
   }
 }
 
 void switchGreen(int cur)
 {
-  if (cur - startG >= 3000 && startG != 0)
+  if (cur - startG > 3000 && startG != 0)
   {
     digitalWrite(LED1, LOW);
     startG = 0;
@@ -57,7 +57,7 @@ void switchGreen(int cur)
 
 void switchYellow(int cur)
 {
-  if (cur - startY < 2000 && startY != 0)
+  if (cur - startY <= 2000 && startY != 0)
   {
     if ((cur - subY) > 500)
     {
