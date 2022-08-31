@@ -59,7 +59,7 @@ void switchYellow(int cur)
 {
   if (cur - startY <= 2000 && startY != 0)
   {
-    if ((cur - subY) > 500)
+    if ((cur - subY) > 500) 
     {
       digitalWrite(LED2, !digitalRead(LED2));
       subY = millis();
