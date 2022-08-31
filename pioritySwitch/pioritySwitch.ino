@@ -1,9 +1,9 @@
-#define button1 12
-#define button2 11
-#define button3 10
-#define LED3 4
-#define LED2 3
-#define LED1 2
+#define button1 12 //left
+#define button2 11 //middle
+#define button3 10 //right
+#define LED3 4 // red
+#define LED2 3 //yellow
+#define LED1 2 //green
 int startR = 0, startG = 0, startY = 0, subY = 0;
 
 void setup()
@@ -19,7 +19,7 @@ void setup()
 
 void loop()
 {
-  int cur = millis();
+  int cur = millis(); //12,000
   switchRed(cur);
   switchGreen(cur);
   switchYellow(cur);
@@ -35,7 +35,7 @@ void switchRed(int cur)
   else if (digitalRead(button1) == HIGH)
   {
     digitalWrite(LED3, !digitalRead(LED3));
-    startR = millis();
+    startR = millis(); //10,000
     delay(300);
   }
 }
@@ -72,6 +72,7 @@ void switchYellow(int cur)
   }
   else if (digitalRead(button2) == LOW && digitalRead(LED3) != HIGH && digitalRead(LED1) != HIGH)
   {
+    digitalWrite(LED2, HIGH);
     startY = millis();
     subY = millis();
     delay(300);
