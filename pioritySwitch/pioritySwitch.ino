@@ -9,8 +9,8 @@ int startR = 0, startG = 0, startY = 0, subY = 0;
 void setup()
 {
   Serial.begin(9600);
-  pinMode(button1, INPUT_PULLUP);
-  pinMode(button2, INPUT_PULLUP);
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
   pinMode(button3, INPUT_PULLUP);
   pinMode(LED3, OUTPUT);
   pinMode(LED2, OUTPUT);
@@ -19,7 +19,12 @@ void setup()
 
 void loop()
 {
-  int cur = millis(); //12,000
+  int cur = millis(); 
+//  Serial.println(digitalRead(button1));
+//  Serial.println(digitalRead(button2));
+//  Serial.println(digitalRead(button3));
+//  Serial.println("_______________________________________");
+//  delay(1000);
   switchRed(cur);
   switchGreen(cur);
   switchYellow(cur);
@@ -36,7 +41,7 @@ void switchRed(int cur)
   {
     digitalWrite(LED3, !digitalRead(LED3));
     startR = millis(); //10,000
-    delay(300);
+    delay(200);
   }
 }
 
@@ -51,7 +56,7 @@ void switchGreen(int cur)
   {
     digitalWrite(LED1, !digitalRead(LED1));
     startG = millis();
-    delay(300);
+    delay(200);
   }
 }
 
@@ -75,6 +80,6 @@ void switchYellow(int cur)
     digitalWrite(LED2, HIGH);
     startY = millis();
     subY = millis();
-    delay(300);
+    delay(200);
   }
 }
