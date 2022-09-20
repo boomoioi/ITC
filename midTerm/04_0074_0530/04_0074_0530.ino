@@ -37,6 +37,7 @@ void loop()
 
   // player 1 position
   int playerRead = player();
+  
   int playerDiff = playerRead - lastX;
   lastX = playerRead;
   playerPo += playerDiff;
@@ -135,15 +136,16 @@ void loop()
 int player()
 {
   int read = analogRead(OHM);
-  int playerX = map(read, 0, 1023, 0, 14);
-  return playerX;
+  read = read/73.1428571429;
+  Serial.println(analogRead(OHM));
+  return read;
 }
 
 int player2()
 {
   int read = analogRead(SLIDE);
-  int player2p = map(read, 0, 1023, 0, 14);
-  return player2p;
+  read = read/73.1428571429;
+  return read;
 }
 
 void show(int y, int x)
