@@ -137,7 +137,6 @@ int player()
 {
   int read = analogRead(OHM);
   read = read/73.1428571429;
-  Serial.println(analogRead(OHM));
   return read;
 }
 
