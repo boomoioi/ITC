@@ -136,6 +136,7 @@ void loop()
 int player()
 {
   int read = analogRead(OHM);
+  Serial.println(read);
   read = read/73.1428571429;
   return read;
 }
