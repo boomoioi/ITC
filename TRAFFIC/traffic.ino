@@ -1,16 +1,16 @@
-#define LEDSG
-#define LEDSY
-#define LEDSR
-#define BUTTONS
+#define LEDSG 10
+#define LEDSY 11
+#define LEDSR 12
+#define BUTTONS 4
 
-#define LEDWG
-#define LEDWY
-#define LEDWR
-#define BUTTONW
+#define LEDWG 7
+#define LEDWY 8
+#define LEDWR 9
+#define BUTTONW 3
 
-#define LEDKG
-#define LEDKR
-#define BUTTONK
+#define LEDKG 6
+#define LEDKR 5
+#define BUTTONK 2
 
 #define goS 0
 #define waitS 1
@@ -28,6 +28,8 @@
 #define blinkTime 300
 
 int lights[8] = {LEDSG, LEDSY, LEDSR, LEDWG, LEDWY, LEDWR, LEDKG, LEDKR};
+int state = 0, isBitSet;
+int inp1, inp2, inp3, temp;
 
 structState
 {
@@ -45,13 +47,35 @@ SType FSM[4] = {
     {B10100100, blinkTime, {blackKF, blackKF, blackKF, blackKF, blackKF, blackKF, blackKF, blackKF}},
     {B00100100, blinkTime, {redKS, redKS, redKS, redKS, redKS, redKS, redKS, redKS}},
     {B10100100, blinkTime, {blackKS, blackKS, blackKS, blackKS, blackKS, blackKS, blackKS, blackKS}},
-}
+    {B00100100, blinkTime, {redKT, redKT, redKT, redKT, redKT, redKT, redKT, redKT}} {B10100100, blinkTime, {goS, goS, goW, goW, goS, goS, goS, goS}},
+};
 
-void
-setup()
+void setup()
 {
+    pinMode(LEDSG, OUTPUT);
+    pinMode(LEDSY, OUTPUT);
+    pinMode(LEDSR, OUTPUT);
+    pinMode(LEDWG, OUTPUT);
+    pinMode(LEDWY, OUTPUT);
+    pinMode(LEDWR, OUTPUT);
+    pinMode(LEDKG, OUTPUT);
+    pinMode(LEDKR, OUTPUT);
+    pinMode(BUTTONS, INPUT);
+    pinMode(BUTTONW, INPUT);
+    pinMode(BUTTONK, INPUT);
 }
 
 void loop()
 {
+    for (int i = 0; i < 8; i++)
+    {
+        isBitSet = bitRead(FSM[state].ST_Out, i);
+        digitalWrite(lights[i], isBitSet);
+    }
+    delay(FSM[state].Time);
+    inp1 = digitalRead(BUTTONS);
+    inp2 = digitalRead(BUTTONW);
+    inp3 = digitalRead(BUTTONK);
+    temp = inp1*4 + inp2*2 + inp3;
+    state = FSM[state].Next[temp];
 }
