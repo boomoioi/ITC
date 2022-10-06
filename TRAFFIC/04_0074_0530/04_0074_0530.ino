@@ -1,16 +1,16 @@
-#define LEDSG 10
-#define LEDSY 11
-#define LEDSR 12
-#define BUTTONS 4
+#define LEDSG 7
+#define LEDSY 8
+#define LEDSR 9
+#define BUTTONS 12
 
-#define LEDWG 7
-#define LEDWY 8
-#define LEDWR 9
-#define BUTTONW 3
+#define LEDWG 4
+#define LEDWY 5
+#define LEDWR 6
+#define BUTTONW 11
 
-#define LEDKG 6
-#define LEDKR 5
-#define BUTTONK 2
+#define LEDKG 3
+#define LEDKR 2
+#define BUTTONK 10
 
 #define goS 0
 #define waitS 1
@@ -44,11 +44,11 @@ SType FSM[10] = {
     {B01110011, greenTime, {goW, waitW, goW, waitW, waitW, waitW, waitW, waitW, waitW}},
     {B01101011, yellowTime, {goS, goK, goK, goK, goS, goK, goS, goK}},
     {B10011011, greenTime, {goK, goK, redKF, redKF, redKF, redKF, redKF, redKF}},
-    {B01011011, blinkTime, {blackKF, blackKF, blackKF, blackKF, blackKF, blackKF, blackKF, blackKF}},
+    {B10011011, blinkTime, {blackKF, blackKF, blackKF, blackKF, blackKF, blackKF, blackKF, blackKF}},
     {B11011011, blinkTime, {redKS, redKS, redKS, redKS, redKS, redKS, redKS, redKS}},
-    {B01011011, blinkTime, {blackKS, blackKS, blackKS, blackKS, blackKS, blackKS, blackKS, blackKS}},
+    {B10011011, blinkTime, {blackKS, blackKS, blackKS, blackKS, blackKS, blackKS, blackKS, blackKS}},
     {B11011011, blinkTime, {redKT, redKT, redKT, redKT, redKT, redKT, redKT, redKT}},
-    {B01011011, blinkTime, {goS, goS, goW, goW, goS, goS, goS, goS}}
+    {B10011011, blinkTime, {goS, goS, goW, goW, goS, goS, goS, goS}}
 };
 
 void setup()

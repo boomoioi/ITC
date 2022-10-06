@@ -2,8 +2,8 @@
 #include "pitches.h"
 LedControl lc = LedControl(11, 13, 10, 4); // DIN,CLK,CS,Number of LED Module
 
-#define SLIDE A0
-#define OHM A3
+#define SLIDE A1
+#define OHM A5
 #define sAudioPin 8
 
 // player2
@@ -137,14 +137,14 @@ int player()
 {
   int read = analogRead(OHM);
   Serial.println(read);
-  read = read/73.1428571429;
+  read = read/73.0714285714;
   return read;
 }
 
 int player2()
 {
   int read = analogRead(SLIDE);
-  read = read/73.1428571429;
+  read = read/73.0714285714;
   return read;
 }
 
