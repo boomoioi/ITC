@@ -12,11 +12,12 @@ void setup() {
   Serial.begin(9600);
   Wire.begin(MY_ADDR);
   Wire.onReceive(receiveEvent);
+  sendData("Token#0#");
 }
 
 void receiveEvent() {
   rd= Wire.read();   
-  Serial.println((char)rd);
+  Serial.print((char)rd);
 }   
 
 
@@ -29,27 +30,31 @@ char* getChar(){
       message[message_pos] = inByte;
       message_pos++;
     } else {
+      message[message_pos] = '\n';
+      message_pos++;
       message[message_pos] = '\0';
-      message_pos= 0;
       return message;
    }
   }
   return "\0";
 }
 
-void loop() {
-  delay(50);
+void sendData(char* message){
   index = 0; 
-  char* message = getChar();
-  Serial.print(message);
-  // Read pot value// Map to range of 1-255 for flash rate
-  // Write a charatreto the Slave
   while(message[index] != '\0'){
     Wire.beginTransmission(SLAVE_ADDR);
     Wire.write(message[index]);
     Wire.endTransmission();
     index++;
   }
+}
+
+void loop() {
+  delay(50);
+  char* message = getChar();
+  // Read pot value// Map to range of 1-255 for flash rate
+  // Write a charatreto the Slave
+  sendData(message);
   
   
 }
