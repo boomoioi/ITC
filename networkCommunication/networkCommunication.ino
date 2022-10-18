@@ -3,9 +3,10 @@
 #define MY_ADDR 1
 #define MAX_MESSAGE_LENGTH 255
 
+char* messageWire;
 int analogPin= A3;
 int rd;
-int index = 0;
+int messageIndex = 0;
 
 void setup() {
   // Initialize I2C communications as Master
@@ -16,8 +17,17 @@ void setup() {
 }
 
 void receiveEvent() {
-  rd = Wire.read();   
-  Serial.print((char)rd);
+  
+  while (Wire.available() > 0){
+    char inByte = Wire.read();
+    if(inByte != '\0'){
+      messageWire[messageIndex] = inByte;
+      messageIndex++;
+    } else {
+      messageWire[messageIndex] = '\0';
+      messageIndex = 0;
+    }
+  }
 }   
 
 
@@ -33,6 +43,7 @@ char* getChar(){
       message[message_pos] = '\n';
       message_pos++;
       message[message_pos] = '\0';
+      message_pos = 0;
       return message;
    }
   }
@@ -40,7 +51,7 @@ char* getChar(){
 }
 
 void sendData(char* message){
-  index = 0; 
+  int index = 0; 
   while(message[index] != '\0'){
     Wire.beginTransmission(SLAVE_ADDR);
     Wire.write(message[index]);
@@ -55,6 +66,5 @@ void loop() {
   // Read pot value// Map to range of 1-255 for flash rate
   // Write a charatreto the Slave
   sendData(message);
-  
   
 }
