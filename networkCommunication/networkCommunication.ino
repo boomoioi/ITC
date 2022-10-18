@@ -1,16 +1,26 @@
 #include <Wire.h>
 #define SLAVE_ADDR 9
+#define MY_ADDR 1
 #define MAX_MESSAGE_LENGTH 255
+
 static char message[MAX_MESSAGE_LENGTH];
 static unsigned int message_pos= 0;
 int analogPin= A3;
-int val= 0;
+int rd;
 int index = 0;
+
 void setup() {
   // Initialize I2C communications as Master
-  Wire.begin();
   Serial.begin(9600);
+  Wire.begin(MY_ADDR);
+  Wire.onReceive(receiveEvent);
 }
+
+void receiveEvent() {
+  rd= Wire.read();   
+  Serial.println((char)rd);
+}   
+
 
 char* getChar(){
   while (Serial.available() > 0){
