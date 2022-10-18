@@ -18,9 +18,6 @@ void setup() {
 void receiveEvent() {
   rd = Wire.read();   
   Serial.print((char)rd);
-  Wire.beginTransmission(SLAVE_ADDR);
-  Wire.write(rd);
-  Wire.endTransmission();
 }   
 
 
