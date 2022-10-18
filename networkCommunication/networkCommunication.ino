@@ -3,8 +3,6 @@
 #define MY_ADDR 1
 #define MAX_MESSAGE_LENGTH 255
 
-static char message[MAX_MESSAGE_LENGTH];
-static unsigned int message_pos= 0;
 int analogPin= A3;
 int rd;
 int index = 0;
@@ -23,6 +21,8 @@ void receiveEvent() {
 
 
 char* getChar(){
+  static char message[MAX_MESSAGE_LENGTH];
+  static unsigned int message_pos= 0;
   while (Serial.available() > 0){
     char inByte = Serial.read();
     if (inByte  != '\n' && (message_pos < MAX_MESSAGE_LENGTH - 1)){
@@ -38,7 +38,8 @@ char* getChar(){
 }
 
 void loop() {
-  delay(50); 
+  delay(50);
+  index = 0; 
   char* message = getChar();
   Serial.print(message);
   // Read pot value// Map to range of 1-255 for flash rate
@@ -49,5 +50,6 @@ void loop() {
     Wire.endTransmission();
     index++;
   }
+  
   
 }
