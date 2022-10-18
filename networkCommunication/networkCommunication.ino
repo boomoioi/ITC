@@ -5,6 +5,7 @@ static char message[MAX_MESSAGE_LENGTH];
 static unsigned int message_pos= 0;
 int analogPin= A3;
 int val= 0;
+int index = 0;
 void setup() {
   // Initialize I2C communications as Master
   Wire.begin();
@@ -23,7 +24,7 @@ char* getChar(){
       return message;
    }
   }
-  return "";
+  return "\0";
 }
 
 void loop() {
@@ -31,9 +32,12 @@ void loop() {
   char* message = getChar();
   Serial.print(message);
   // Read pot value// Map to range of 1-255 for flash rate
-  val= "Token#0#";
   // Write a charatreto the Slave
-  Wire.beginTransmission(SLAVE_ADDR);
-  Wire.write(val);
-  Wire.endTransmission();
+  while(message[index] != '\0'){
+    Wire.beginTransmission(SLAVE_ADDR);
+    Wire.write(message[index]);
+    Wire.endTransmission();
+    index++;
+  }
+  
 }
