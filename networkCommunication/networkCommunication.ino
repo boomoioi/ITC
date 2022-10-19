@@ -1,70 +1,62 @@
 #include <Wire.h>
-#define SLAVE_ADDR 9
-#define MY_ADDR 1
-#define MAX_MESSAGE_LENGTH 255
-
-char* messageWire;
-int analogPin= A3;
-int rd;
-int messageIndex = 0;
+#define SLAVE_ADDR1 8
+char messageR[300];
 
 void setup() {
   // Initialize I2C communications as Master
   Serial.begin(9600);
-  Wire.begin(MY_ADDR);
-  Wire.onReceive(receiveEvent);
-  sendData("Token#0#");
+  Wire.begin();
 }
 
-void receiveEvent() {
-  
-  while (Wire.available() > 0){
-    char inByte = Wire.read();
-    if(inByte != '\0'){
-      messageWire[messageIndex] = inByte;
-      messageIndex++;
-    } else {
-      messageWire[messageIndex] = '\0';
-      messageIndex = 0;
+void getChar(){
+  if(Serial.available() > 0){
+    int i=0;
+    while (Serial.available() > 1){
+      int inByte = Serial.read();
+      messageR[i] = (char)inByte;
+      i++;
+    }
+    Serial.read();
+    messageR[i] = '\0';
+  } else {
+    char* normal = "Token#0#";
+    for(int i=0; i<8; i++){
+      messageR[i] = normal[i];
+    }
+    messageR[8]='\0';
+  }
+}
+
+void request(){
+  if(Wire.available() > 0){
+    int i=0;
+    while (Wire.available() > 0){
+      int x = Wire.read();
+      messageR[i] = (char)x;
+      if(messageR[i] == '\0' || x==255){
+        messageR[i] = '\0';
+        break;
+      }
+      i++;
     }
   }
-}   
-
-
-char* getChar(){
-  static char message[MAX_MESSAGE_LENGTH];
-  static unsigned int message_pos= 0;
-  while (Serial.available() > 0){
-    char inByte = Serial.read();
-    if (inByte  != '\n' && (message_pos < MAX_MESSAGE_LENGTH - 1)){
-      message[message_pos] = inByte;
-      message_pos++;
-    } else {
-      message[message_pos] = '\n';
-      message_pos++;
-      message[message_pos] = '\0';
-      message_pos = 0;
-      return message;
-   }
-  }
-  return "\0";
+  Serial.println(messageR);
+  messageR[0] = '\0';
 }
 
-void sendData(char* message){
-  int index = 0; 
-  while(message[index] != '\0'){
-    Wire.beginTransmission(SLAVE_ADDR);
-    Wire.write(message[index]);
-    Wire.endTransmission();
-    index++;
-  }
-}
 
 void loop() {
-  delay(50);
-  char* message = getChar();
-  // Read pot value// Map to range of 1-255 for flash rate
-  // Write a charatreto the Slave
-  sendData(message);
+  getChar();
+  if(messageR[0] != '\0'){
+    Wire.beginTransmission(SLAVE_ADDR1);
+    Wire.write(messageR);
+    Wire.endTransmission();
+    messageR[0] = '\0';
+  }
+  delay(3000);
+  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
+  request();
+  delay(3000);
+    
   
 }
