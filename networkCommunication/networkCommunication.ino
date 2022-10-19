@@ -11,13 +11,12 @@ void setup() {
 void getChar(){
   if(Serial.available() > 0){
     int i=0;
-    while (Serial.available() > 1){
+    while (Serial.available() > 0){
       int inByte = Serial.read();
       messageR[i] = (char)inByte;
       i++;
     }
-    Serial.read();
-    messageR[i] = '\0';
+    messageR[i-1] = '\0';
   } else {
     char* normal = "Token#0#";
     for(int i=0; i<8; i++){
@@ -40,23 +39,23 @@ void request(){
       i++;
     }
   }
-  Serial.println(messageR);
+//  Serial.println(messageR);
   messageR[0] = '\0';
 }
 
 
 void loop() {
+  
   getChar();
-  if(messageR[0] != '\0'){
-    Wire.beginTransmission(SLAVE_ADDR1);
-    Wire.write(messageR);
-    Wire.endTransmission();
-    messageR[0] = '\0';
-  }
-  delay(3000);
-  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
-  request();
-  delay(3000);
-    
+//  if(messageR[0] != '\0'){
+//    Wire.beginTransmission(SLAVE_ADDR1);
+//    Wire.write(messageR);
+//    Wire.endTransmission();
+//    messageR[0] = '\0';
+//  }
+//  delay(100);
+//  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
+//  request();
+//  delay(100);
   
 }
