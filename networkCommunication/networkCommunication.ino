@@ -1,6 +1,7 @@
 #include <Wire.h>
 #define SLAVE_ADDR1 8
 char messageR[300];
+int mess = 0;
 
 void setup() {
   // Initialize I2C communications as Master
@@ -10,14 +11,17 @@ void setup() {
 
 void getChar(){
   if(Serial.available() > 0){
-    int i=0;
     while (Serial.available() > 0){
-      int inByte = Serial.read();
-      messageR[i] = (char)inByte;
-      i++;
+      char inByte = Serial.read();
+      if(inByte != '\n'){
+        messageR[mess] = (char)inByte;
+      } else {
+        messageR[mess] = '\0';
+      }
+      mess++;
     }
-    messageR[i-1] = '\0';
-  } else {
+  } 
+  else {
     char* normal = "Token#0#";
     for(int i=0; i<8; i++){
       messageR[i] = normal[i];
@@ -47,18 +51,18 @@ void request(){
 void loop() {
   
   getChar();
-  
+  Serial.println(messageR);
   delay(2000);
-  if(messageR[0] != '\0'){
-    Wire.beginTransmission(SLAVE_ADDR1);
-    Wire.write(messageR);
-    Wire.endTransmission();
-    messageR[0] = '\0';
-  }
-  delay(100);
-  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
-  request();
-  Serial.print(messageR);
-  delay(100);
+//  if(messageR[0] != '\0'){
+//    Wire.beginTransmission(SLAVE_ADDR1);
+//    Wire.write(messageR);
+//    Wire.endTransmission();
+//    messageR[0] = '\0';
+//  }
+//  delay(100);
+//  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
+//  request();
+//  Serial.print(messageR);
+//  delay(100);
   
 }
