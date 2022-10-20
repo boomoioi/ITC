@@ -47,15 +47,18 @@ void request(){
 void loop() {
   
   getChar();
-//  if(messageR[0] != '\0'){
-//    Wire.beginTransmission(SLAVE_ADDR1);
-//    Wire.write(messageR);
-//    Wire.endTransmission();
-//    messageR[0] = '\0';
-//  }
-//  delay(100);
-//  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
-//  request();
-//  delay(100);
+  
+  delay(2000);
+  if(messageR[0] != '\0'){
+    Wire.beginTransmission(SLAVE_ADDR1);
+    Wire.write(messageR);
+    Wire.endTransmission();
+    messageR[0] = '\0';
+  }
+  delay(100);
+  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
+  request();
+  Serial.print(messageR);
+  delay(100);
   
 }

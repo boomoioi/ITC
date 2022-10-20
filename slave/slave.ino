@@ -1,26 +1,45 @@
 #include <Wire.h>
-#define SLAVE_ADDR 9
+#define MY_ADDR 8
 
-int LED = 13;
-int rd;   // Variable for received data
-int br;   // Variable for blink rate
+
+char messageR[300];
 
 void setup() {
-  pinMode(LED, OUTPUT);
-  Wire.begin(SLAVE_ADDR);
+  Serial.begin(9600);
+  Wire.begin(MY_ADDR);
   Wire.onReceive(receiveEvent);
+  Wire.onRequest(requestEvent);
 }
 
-void receiveEvent() {
-  rd= Wire.read();   
-  Serial.println((char)rd);
+void receiveEvent(int howMany) {
+  if(Wire.available() > 0){
+    int i=0;
+    while (Wire.available() > 0){
+      messageR[i] = Wire.read();
+      i++;
+    }
+    messageR[i] = '\0';
+  }
 }
+
+void requestEvent(){
+  Wire.write(messageR);
+}
+
+void getChar(){
+  if(Serial.available() > 0){
+    int i=0;
+    while (Serial.available() > 0){
+      int inByte = Serial.read();
+      messageR[i] = (char)inByte;
+      i++;
+    }
+    messageR[i-1] = '\0';
+  }
+}
+
 
 void loop() {
-  delay(50);
-  br= map(rd, 1, 255, 100, 2000);    
-  digitalWrite(LED, HIGH);
-  delay(br);
-  digitalWrite(LED, LOW);    
-  delay(br);
+  getChar(); 
+  Serial.print(messageR);
 }
