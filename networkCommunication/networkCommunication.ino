@@ -1,5 +1,6 @@
 #include <Wire.h>
 #define SLAVE_ADDR1 8
+#define SLAVE_ADDR2 9
 char messageR[300];
 char empty[10] = "Token#0#";
 int mess = 0;
@@ -89,15 +90,20 @@ void showMessage(){
 }
 
 void loop() {
-  
-  if(messageR[0] != '\0'){
-    Wire.beginTransmission(SLAVE_ADDR1);
-    Wire.write(messageR);
-    Wire.endTransmission();
-    messageR[0] = '\0';
-  }
+  Wire.beginTransmission(SLAVE_ADDR1);
+  Wire.write(messageR);
+  Wire.endTransmission();
   delay(300);
-  Wire.requestFrom(8, 100);    // request 6 bytes from slave device #8
+  Wire.requestFrom(SLAVE_ADDR1, 300);    // request 6 bytes from slave device #8
   request();
+  delay(300);
+
+  Wire.beginTransmission(SLAVE_ADDR2);
+  Wire.write(messageR);
+  Wire.endTransmission();
+  delay(300);
+  Wire.requestFrom(SLAVE_ADDR2, 300);    // request 6 bytes from slave device #8
+  request();
+  delay(300);
   
 }
