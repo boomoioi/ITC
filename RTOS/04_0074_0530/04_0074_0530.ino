@@ -110,8 +110,8 @@ void vReceiverTaskG(void *pvParameters){
     const TickType_t xTicksToWait= pdMS_TO_TICKS(100);
     pinMode(GREEN, OUTPUT); 
     int check = 1;
-    unsigned long startBlink; 
-    unsigned long startTime;
+    unsigned long startBlink = 0; 
+    unsigned long startTime = 0;
     while(1){
       int temp = xQueueReceive(ledQueueG,&valueReceived,xTicksToWait);
       if(temp==1 && check){
@@ -120,11 +120,11 @@ void vReceiverTaskG(void *pvParameters){
         digitalWrite(GREEN, HIGH);
         check = 0;
       }      
-      if(millis()-startTime>=3000){
+      if(millis()-startTime>=3000 and startTime != 0){
         check = 1;
         digitalWrite(GREEN, LOW);
       } else {
-        if(millis()-startBlink >= 500){
+        if(millis()-startBlink >= 500 and startBlink != 0){
           digitalWrite(GREEN, !digitalRead(GREEN));
           startBlink = millis();
         }
@@ -141,7 +141,7 @@ void vReceiverTaskY(void *pvParameters){
     unsigned long startTime=0; 
     int blinkCheck = 0;
     while(1){
-      if(xQueueReceive(ledQueueY,&valueReceived,xTicksToWait) == 1 && millis()-startTime>200){
+      if(xQueueReceive(ledQueueY,&valueReceived,xTicksToWait) == 1){
            blinkCheck = !blinkCheck;
            startTime = millis();
            startBlink = millis();
@@ -159,6 +159,7 @@ void vReceiverTaskY(void *pvParameters){
     }
 }
 
+int counter=0;
 
 void vReceiverTaskR(void *pvParameters){
     int32_t valueReceived;
@@ -169,11 +170,17 @@ void vReceiverTaskR(void *pvParameters){
       int temp = xQueueReceive(ledQueueR,&valueReceived,xTicksToWait);
 //      Serial.println(temp);
       if(temp == 1){
-        startTime = millis();
-        digitalWrite(RED, HIGH);
+        if(counter==0){
+          startTime = millis();
+          digitalWrite(RED, HIGH);
+        } 
+        counter++;
+        
       }
-      if(millis() - startTime >= 3000){
+      if(millis() - startTime >= 3000*counter){
+        
         digitalWrite(RED, LOW);
+        counter = 0;
       }
       vTaskDelay(1);
     }
